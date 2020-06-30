@@ -1,6 +1,8 @@
 package com.wimbli.WorldBorder;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -15,7 +17,7 @@ public class BorderData
 	private double z = 0;
 	private int radiusX = 0;
 	private int radiusZ = 0;
-	private Boolean shapeRound = null;
+	private Shape shape = null;
 	private boolean wrapping = false;
 
 	// some extra data kept handy for faster border checks
@@ -29,48 +31,84 @@ public class BorderData
 	private double DefiniteRectangleZ;
 	private double radiusSquaredQuotient;
 
-	public BorderData(double x, double z, int radiusX, int radiusZ, Boolean shapeRound, boolean wrap)
+	/*
+	 * Based in part on <https://stackoverflow.com/a/12512216>.
+	 */
+	public enum Shape {
+		RECTANGULAR("rectangular", "square"),
+		ELLIPTIC("elliptic", "circular");
+
+		private String[] aliases;
+
+		public static Map<String, Shape> aliasing = new HashMap<>();
+		static {
+			for (Shape shape : Shape.values()) {
+				for (String alias : shape.aliases) {
+					aliasing.put(alias, shape);
+				}
+			}
+		}
+
+		private Shape(String ... aliases) {
+			this.aliases = aliases;
+		}
+
+		public static Shape fromString(String alias) {
+			Shape shape = aliasing.get(alias);
+			if (shape == null) {
+				throw new IllegalArgumentException(
+						"No enum alias " + Shape.class.getCanonicalName() + "." + alias);
+			}
+			return shape;
+		}
+
+		public String toString() {
+			return name().toLowerCase();
+		}
+	}
+
+	public BorderData(double x, double z, int radiusX, int radiusZ, Shape shape, boolean wrap)
 	{
-		setData(x, z, radiusX, radiusZ, shapeRound, wrap);
+		setData(x, z, radiusX, radiusZ, shape, wrap);
 	}
 	public BorderData(double x, double z, int radiusX, int radiusZ)
 	{
 		setData(x, z, radiusX, radiusZ, null);
 	}
-	public BorderData(double x, double z, int radiusX, int radiusZ, Boolean shapeRound)
+	public BorderData(double x, double z, int radiusX, int radiusZ, Shape shape)
 	{
-		setData(x, z, radiusX, radiusZ, shapeRound);
+		setData(x, z, radiusX, radiusZ, shape);
 	}
 	public BorderData(double x, double z, int radius)
 	{
 		setData(x, z, radius, null);
 	}
-	public BorderData(double x, double z, int radius, Boolean shapeRound)
+	public BorderData(double x, double z, int radius, Shape shape)
 	{
-		setData(x, z, radius, shapeRound);
+		setData(x, z, radius, shape);
 	}
 
-	public final void setData(double x, double z, int radiusX, int radiusZ, Boolean shapeRound, boolean wrap)
+	public final void setData(double x, double z, int radiusX, int radiusZ, Shape shape, boolean wrap)
 	{
 		this.x = x;
 		this.z = z;
-		this.shapeRound = shapeRound;
+		this.shape = shape;
 		this.wrapping = wrap;
 		this.setRadiusX(radiusX);
 		this.setRadiusZ(radiusZ);
 	}
-	public final void setData(double x, double z, int radiusX, int radiusZ, Boolean shapeRound)
+	public final void setData(double x, double z, int radiusX, int radiusZ, Shape shape)
 	{
-		setData(x, z, radiusX, radiusZ, shapeRound, false);
+		setData(x, z, radiusX, radiusZ, shape, false);
 	}
-	public final void setData(double x, double z, int radius, Boolean shapeRound)
+	public final void setData(double x, double z, int radius, Shape shape)
 	{
-		setData(x, z, radius, radius, shapeRound, false);
+		setData(x, z, radius, radius, shape, false);
 	}
 
 	public BorderData copy()
 	{
-		return new BorderData(x, z, radiusX, radiusZ, shapeRound, wrapping);
+		return new BorderData(x, z, radiusX, radiusZ, shape, wrapping);
 	}
 
 	public double getX()
@@ -137,13 +175,13 @@ public class BorderData
 	}
 
 
-	public Boolean getShape()
+	public Shape getShape()
 	{
-		return shapeRound;
+		return shape;
 	}
-	public void setShape(Boolean shapeRound)
+	public void setShape(Shape shape)
 	{
-		this.shapeRound = shapeRound;
+		this.shape = shape;
 	}
 
 
@@ -160,35 +198,38 @@ public class BorderData
 	@Override
 	public String toString()
 	{
-		return "radius " + ((radiusX == radiusZ) ? radiusX : radiusX + "x" + radiusZ) + " at X: " + Config.coord.format(x) + " Z: " + Config.coord.format(z) + (shapeRound != null ? (" (shape override: " + Config.ShapeName(shapeRound.booleanValue()) + ")") : "") + (wrapping ? (" (wrapping)") : "");
+		return "radius " + ((radiusX == radiusZ) ? radiusX : radiusX + "x" + radiusZ) + " at X: " + Config.coord.format(x) + " Z: " + Config.coord.format(z)
+			+ (shape != null ? (" (shape override: " + shape.name() + ")") : "")
+			+ (wrapping ? (" (wrapping)") : "");
 	}
 
 	// This algorithm of course needs to be fast, since it will be run very frequently
-	public boolean insideBorder(double xLoc, double zLoc, boolean round)
+	public boolean insideBorder(double xLoc, double zLoc, Shape shape)
 	{
 		// if this border has a shape override set, use it
-		if (shapeRound != null)
-			round = shapeRound.booleanValue();
+		if (this.shape != null)
+			shape = this.shape;
 
-		// square border
-		if (!round)
-			return !(xLoc < minX || xLoc > maxX || zLoc < minZ || zLoc > maxZ);
-
-		// round border
-		else
-		{
-			// elegant round border checking algorithm is from rBorder by Reil with almost no changes, all credit to him for it
-			double X = Math.abs(x - xLoc);
-			double Z = Math.abs(z - zLoc);
-
-			if (X < DefiniteRectangleX && Z < DefiniteRectangleZ)
-				return true;	// Definitely inside
-			else if (X >= radiusX || Z >= radiusZ)
-				return false;	// Definitely outside
-			else if (X * X + Z * Z * radiusSquaredQuotient < radiusXSquared)
-				return true;	// After further calculation, inside
-			else
-				return false;	// Apparently outside, then
+		switch (shape) {
+			// square border
+			case RECTANGULAR:
+				return !(xLoc < minX || xLoc > maxX || zLoc < minZ || zLoc > maxZ);
+			// round border
+			case ELLIPTIC:
+				// elegant round border checking algorithm is from rBorder by Reil with almost no changes, all credit to him for it
+				double X = Math.abs(x - xLoc);
+				double Z = Math.abs(z - zLoc);
+	
+				if (X < DefiniteRectangleX && Z < DefiniteRectangleZ)
+					return true;	// Definitely inside
+				else if (X >= radiusX || Z >= radiusZ)
+					return false;	// Definitely outside
+				else if (X * X + Z * Z * radiusSquaredQuotient < radiusXSquared)
+					return true;	// After further calculation, inside
+				else
+					return false;	// Apparently outside, then
+			default:
+				return true;
 		}
 	}
 	public boolean insideBorder(double xLoc, double zLoc)
@@ -199,72 +240,71 @@ public class BorderData
 	{
 		return insideBorder(loc.getX(), loc.getZ(), Config.ShapeRound());
 	}
-	public boolean insideBorder(CoordXZ coord, boolean round)
+	public boolean insideBorder(CoordXZ coord, Shape shape)
 	{
-		return insideBorder(coord.x, coord.z, round);
+		return insideBorder(coord.x, coord.z, shape);
 	}
 	public boolean insideBorder(CoordXZ coord)
 	{
 		return insideBorder(coord.x, coord.z, Config.ShapeRound());
 	}
 
-	public Location correctedPosition(Location loc, boolean round, boolean flying)
+	public Location correctedPosition(Location loc, Shape shape, boolean flying)
 	{
 		// if this border has a shape override set, use it
-		if (shapeRound != null)
-			round = shapeRound.booleanValue();
+		if (this.shape != null)
+			shape = this.shape;
 
 		double xLoc = loc.getX();
 		double zLoc = loc.getZ();
 		double yLoc = loc.getY();
 
-		// square border
-		if (!round)
-		{
-			if (wrapping)
-			{
-				if (xLoc <= minX)
-					xLoc = maxX - Config.KnockBack();
-				else if (xLoc >= maxX)
-					xLoc = minX + Config.KnockBack();
-				if (zLoc <= minZ)
-					zLoc = maxZ - Config.KnockBack();
-				else if (zLoc >= maxZ)
-					zLoc = minZ + Config.KnockBack();
-			}
-			else
-			{
-				if (xLoc <= minX)
-					xLoc = minX + Config.KnockBack();
-				else if (xLoc >= maxX)
-					xLoc = maxX - Config.KnockBack();
-				if (zLoc <= minZ)
-					zLoc = minZ + Config.KnockBack();
-				else if (zLoc >= maxZ)
-					zLoc = maxZ - Config.KnockBack();
-			}
-		}
-
-		// round border
-		else
-		{
-			// algorithm originally from: http://stackoverflow.com/questions/300871/best-way-to-find-a-point-on-a-circle-closest-to-a-given-point
-			// modified by Lang Lukas to support elliptical border shape
-
-			//Transform the ellipse to a circle with radius 1 (we need to transform the point the same way)
-			double dX = xLoc - x;
-			double dZ = zLoc - z;
-			double dU = Math.sqrt(dX *dX + dZ * dZ); //distance of the untransformed point from the center
-			double dT = Math.sqrt(dX *dX / radiusXSquared + dZ * dZ / radiusZSquared); //distance of the transformed point from the center
-			double f = (1 / dT - Config.KnockBack() / dU); //"correction" factor for the distances
-			if (wrapping)
-			{
-				xLoc = x - dX * f;
-				zLoc = z - dZ * f;
-			} else {
-				xLoc = x + dX * f;
-				zLoc = z + dZ * f;
-			}
+		switch (shape) {
+			// square border
+			case RECTANGULAR:
+				if (wrapping)
+				{
+					if (xLoc <= minX)
+						xLoc = maxX - Config.KnockBack();
+					else if (xLoc >= maxX)
+						xLoc = minX + Config.KnockBack();
+					if (zLoc <= minZ)
+						zLoc = maxZ - Config.KnockBack();
+					else if (zLoc >= maxZ)
+						zLoc = minZ + Config.KnockBack();
+				}
+				else
+				{
+					if (xLoc <= minX)
+						xLoc = minX + Config.KnockBack();
+					else if (xLoc >= maxX)
+						xLoc = maxX - Config.KnockBack();
+					if (zLoc <= minZ)
+						zLoc = minZ + Config.KnockBack();
+					else if (zLoc >= maxZ)
+						zLoc = maxZ - Config.KnockBack();
+				}
+				break;
+			// round border
+			case ELLIPTIC:
+				// algorithm originally from: http://stackoverflow.com/questions/300871/best-way-to-find-a-point-on-a-circle-closest-to-a-given-point
+				// modified by Lang Lukas to support elliptical border shape
+	
+				//Transform the ellipse to a circle with radius 1 (we need to transform the point the same way)
+				double dX = xLoc - x;
+				double dZ = zLoc - z;
+				double dU = Math.sqrt(dX *dX + dZ * dZ); //distance of the untransformed point from the center
+				double dT = Math.sqrt(dX *dX / radiusXSquared + dZ * dZ / radiusZSquared); //distance of the transformed point from the center
+				double f = (1 / dT - Config.KnockBack() / dU); //"correction" factor for the distances
+				if (wrapping)
+				{
+					xLoc = x - dX * f;
+					zLoc = z - dZ * f;
+				} else {
+					xLoc = x + dX * f;
+					zLoc = z + dZ * f;
+				}
+				break;
 		}
 
 		int ixLoc = Location.locToBlock(xLoc);
@@ -281,9 +321,9 @@ public class BorderData
 
 		return new Location(loc.getWorld(), Math.floor(xLoc) + 0.5, yLoc, Math.floor(zLoc) + 0.5, loc.getYaw(), loc.getPitch());
 	}
-	public Location correctedPosition(Location loc, boolean round)
+	public Location correctedPosition(Location loc, Shape shape)
 	{
-		return correctedPosition(loc, round, false);
+		return correctedPosition(loc, shape, false);
 	}
 	public Location correctedPosition(Location loc)
 	{

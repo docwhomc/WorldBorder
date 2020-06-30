@@ -55,15 +55,17 @@ public class CmdWshape extends WBCmd
 			return;
 		}
 
-		Boolean shape = null;
+		BorderData.Shape shape = null;
 		if (shapeName.equals("rectangular") || shapeName.equals("square"))
-			shape = false;
+			shape = BorderData.Shape.RECTANGULAR;
 		else if (shapeName.equals("elliptic") || shapeName.equals("round"))
-			shape = true;
+			shape = BorderData.Shape.ELLIPTIC;
+		else
+			shape = BorderData.Shape.valueOf(shapeName);
 
 		border.setShape(shape);
 		Config.setBorder(worldName, border, false);
 
-		sender.sendMessage("Border shape for world \"" + worldName + "\" is now set to \"" + Config.ShapeName(shape) + "\".");
+		sender.sendMessage("Border shape for world \"" + worldName + "\" is now set to \"" + shape.toString() + "\".");
 	}
 }

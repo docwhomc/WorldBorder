@@ -26,7 +26,7 @@ public class CmdShape extends WBCmd
 	@Override
 	public void cmdStatus(CommandSender sender)
 	{
-		sender.sendMessage(C_HEAD + "The default border shape for all worlds is currently set to \"" + Config.ShapeName() + "\".");
+		sender.sendMessage(C_HEAD + "The default border shape for all worlds is currently set to \"" + Config.getShape().toString() + "\".");
 	}
 
 	@Override
@@ -34,9 +34,9 @@ public class CmdShape extends WBCmd
 	{
 		String shape = params.get(0).toLowerCase();
 		if (shape.equals("rectangular") || shape.equals("square"))
-			Config.setShape(false);
+			Config.setShape(BorderData.Shape.RECTANGULAR);
 		else if (shape.equals("elliptic") || shape.equals("round"))
-			Config.setShape(true);
+			Config.setShape(BorderData.Shape.ELLIPTIC);
 		else
 		{
 			sendErrorAndHelp(sender, "You must specify one of the 4 valid shape names below.");

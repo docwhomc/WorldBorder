@@ -167,10 +167,14 @@ public class DynMapFeatures
 
 		if (!Config.DynmapBorderEnabled()) return;
 
-		if ((border.getShape() == null) ? Config.ShapeRound() : border.getShape())
-			showRoundBorder(worldName, border);
-		else
+		switch ((border.getShape() == null) ? Config.ShapeRound() : border.getShape()) {
+		case RECTANGULAR:
 			showSquareBorder(worldName, border);
+			break;
+		case ELLIPTIC:
+			showRoundBorder(worldName, border);
+			break;
+		}
 	}
 
 	private static void showRoundBorder(String worldName, BorderData border)

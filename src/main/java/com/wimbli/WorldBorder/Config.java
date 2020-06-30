@@ -36,7 +36,7 @@ public class Config
 	private static Runtime rt = Runtime.getRuntime();
 
 	// actual configuration values which can be changed
-	private static boolean shapeRound = true;
+	private static BorderData.Shape shape = BorderData.Shape.ELLIPTIC;
 	private static Map<String, BorderData> borders = Collections.synchronizedMap(new LinkedHashMap<String, BorderData>());
 	private static Set<UUID> bypassPlayers = Collections.synchronizedSet(new LinkedHashSet<UUID>());
 	private static String message;		// raw message without color code formatting
@@ -81,25 +81,25 @@ public class Config
 		setBorder(world, border, true);
 	}
 
-	public static void setBorder(String world, int radiusX, int radiusZ, double x, double z, Boolean shapeRound)
+	public static void setBorder(String world, int radiusX, int radiusZ, double x, double z, BorderData.Shape shape)
 	{
 		BorderData old = Border(world);
 		boolean oldWrap = (old != null) && old.getWrapping();
-		setBorder(world, new BorderData(x, z, radiusX, radiusZ, shapeRound, oldWrap), true);
+		setBorder(world, new BorderData(x, z, radiusX, radiusZ, shape, oldWrap), true);
 	}
 	public static void setBorder(String world, int radiusX, int radiusZ, double x, double z)
 	{
 		BorderData old = Border(world);
-		Boolean oldShape = (old == null) ? null : old.getShape();
+		BorderData.Shape oldShape = (old == null) ? null : old.getShape();
 		boolean oldWrap = (old != null) && old.getWrapping();
 		setBorder(world, new BorderData(x, z, radiusX, radiusZ, oldShape, oldWrap), true);
 	}
 
 
 	// backwards-compatible methods from before elliptical/rectangular shapes were supported
-	public static void setBorder(String world, int radius, double x, double z, Boolean shapeRound)
+	public static void setBorder(String world, int radius, double x, double z, BorderData.Shape shape)
 	{
-		setBorder(world, new BorderData(x, z, radius, radius, shapeRound), true);
+		setBorder(world, new BorderData(x, z, radius, radius, shape), true);
 	}
 	public static void setBorder(String world, int radius, double x, double z)
 	{
@@ -108,22 +108,22 @@ public class Config
 
 
 	// set border based on corner coordinates
-	public static void setBorderCorners(String world, double x1, double z1, double x2, double z2, Boolean shapeRound, boolean wrap)
+	public static void setBorderCorners(String world, double x1, double z1, double x2, double z2, BorderData.Shape shape, boolean wrap)
 	{
 		double radiusX = Math.abs(x1 - x2) / 2;
 		double radiusZ = Math.abs(z1 - z2) / 2;
 		double x = ((x1 < x2) ? x1 : x2) + radiusX;
 		double z = ((z1 < z2) ? z1 : z2) + radiusZ;
-		setBorder(world, new BorderData(x, z, (int)Math.round(radiusX), (int)Math.round(radiusZ), shapeRound, wrap), true);
+		setBorder(world, new BorderData(x, z, (int)Math.round(radiusX), (int)Math.round(radiusZ), shape, wrap), true);
 	}
-	public static void setBorderCorners(String world, double x1, double z1, double x2, double z2, Boolean shapeRound)
+	public static void setBorderCorners(String world, double x1, double z1, double x2, double z2, BorderData.Shape shape)
 	{
-		setBorderCorners(world, x1, z1, x2, z2, shapeRound, false);
+		setBorderCorners(world, x1, z1, x2, z2, shape, false);
 	}
 	public static void setBorderCorners(String world, double x1, double z1, double x2, double z2)
 	{
 		BorderData old = Border(world);
-		Boolean oldShape = (old == null) ? null : old.getShape();
+		BorderData.Shape oldShape = (old == null) ? null : old.getShape();
 		boolean oldWrap = (old != null) && old.getWrapping();
 		setBorderCorners(world, x1, z1, x2, z2, oldShape, oldWrap);
 	}
@@ -202,28 +202,34 @@ public class Config
 		return messageClean;
 	}
 
-	public static void setShape(boolean round)
+	public static void setShape(BorderData.Shape round)
 	{
-		shapeRound = round;
+		shape = round;
 		log("Set default border shape to " + (ShapeName()) + ".");
 		save(true);
 		DynMapFeatures.showAllBorders();
 	}
 
-	public static boolean ShapeRound()
+	public static BorderData.Shape ShapeRound()
 	{
-		return shapeRound;
+		return shape;
 	}
 
+	@Deprecated
 	public static String ShapeName()
 	{
-		return ShapeName(shapeRound);
+		return ShapeName(shape);
 	}
-	public static String ShapeName(Boolean round)
+	@Deprecated
+	public static String ShapeName(BorderData.Shape shape)
 	{
-		if (round == null)
+		if (shape == null)
 			return "default";
-		return round ? "elliptic/round" : "rectangular/square";
+		return shape.toString();
+	}
+
+	public static BorderData.Shape getShape() {
+		return shape;
 	}
 
 	public static void setDebug(boolean debugMode)
@@ -600,7 +606,7 @@ public class Config
 		int cfgVersion = cfg.getInt("cfg-version", currentCfgVersion);
 
 		String msg = cfg.getString("message");
-		shapeRound = cfg.getBoolean("round-border", true);
+		shape = BorderData.Shape.valueOf(cfg.getString("shape", BorderData.Shape.ELLIPTIC.toString()));
 		DEBUG = cfg.getBoolean("debug-mode", false);
 		whooshEffect = cfg.getBoolean("whoosh-effect", true);
 		portalRedirection = cfg.getBoolean("portal-redirection", true);
@@ -669,7 +675,7 @@ public class Config
 					bord.set("radiusZ", radius);
 				}
 
-				Boolean overrideShape = (Boolean) bord.get("shape-round");
+				BorderData.Shape overrideShape = (BorderData.Shape) bord.get("shape");
 				boolean wrap = bord.getBoolean("wrapping", false);
 				BorderData border = new BorderData(bord.getDouble("x", 0), bord.getDouble("z", 0), bord.getInt("radiusX", 0), bord.getInt("radiusZ", 0), overrideShape, wrap);
 				borders.put(worldName, border);
@@ -711,7 +717,7 @@ public class Config
 
 		cfg.set("cfg-version", currentCfgVersion);
 		cfg.set("message", message);
-		cfg.set("round-border", shapeRound);
+		cfg.set("shape", shape);
 		cfg.set("debug-mode", DEBUG);
 		cfg.set("whoosh-effect", whooshEffect);
 		cfg.set("portal-redirection", portalRedirection);

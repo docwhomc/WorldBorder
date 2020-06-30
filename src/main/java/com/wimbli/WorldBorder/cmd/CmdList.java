@@ -24,7 +24,7 @@ public class CmdList extends WBCmd
 	@Override
 	public void execute(CommandSender sender, Player player, List<String> params, String worldName)
 	{
-		sender.sendMessage("Default border shape for all worlds is \"" + Config.ShapeName() + "\".");
+		sender.sendMessage("Default border shape for all worlds is \"" + Config.getShape().toString() + "\".");
 
 		Set<String> list = Config.BorderDescriptions();
 
