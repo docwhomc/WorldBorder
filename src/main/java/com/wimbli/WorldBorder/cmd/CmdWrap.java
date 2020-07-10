@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.wimbli.WorldBorder.*;
 
-
+@Deprecated
 public class CmdWrap extends WBCmd
 {
 	public CmdWrap()
@@ -53,7 +53,7 @@ public class CmdWrap extends WBCmd
 			return;
 		}
 
-		border.setWrapping(wrap);
+		border.setShape(border.getShape().withWrapping(wrap));
 		Config.setBorder(worldName, border, false);
 
 		sender.sendMessage("Border for world \"" + worldName + "\" is now set to " + (wrap ? "" : "not ") + "wrap around.");

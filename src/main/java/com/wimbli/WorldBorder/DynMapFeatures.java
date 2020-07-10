@@ -169,9 +169,12 @@ public class DynMapFeatures
 
 		switch ((border.getShape() == null) ? Config.ShapeRound() : border.getShape()) {
 		case RECTANGULAR:
+        case CYLINDRICAL:
+		case TOROIDAL:
 			showSquareBorder(worldName, border);
 			break;
 		case ELLIPTIC:
+		case WRAPPED_ELLIPTIC:
 			showRoundBorder(worldName, border);
 			break;
 		}
