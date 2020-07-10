@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wimbli.WorldBorder</groupId>
 	<artifactId>WorldBorder</artifactId>
-	<version>1.9.10-beta</version>
+	<version>2.0.0-dev-20w28a</version>
 	<name>WorldBorder</name>
-	<url>https://github.com/Brettflan/WorldBorder</url>
+	<url>https://github.com/docwhomc/WorldBorder</url>
 	<issueManagement>
 		<system>GitHub</system>
 		<url>https://github.com/Brettflan/WorldBorder/issues</url>
@@ -82,7 +82,7 @@
 					<relocations>
 						<relocation>
 							<pattern>io.papermc.lib</pattern>
-							<shadedPattern>com.wimbli.WorldBorder.paperlib</shadedPattern> <!-- Replace this -->
+							<shadedPattern>com.wimbli.WorldBorder.paperlib</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
