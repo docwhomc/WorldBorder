@@ -1,6 +1,16 @@
 WorldBorder
 ===========
+ 
+This plugin is no longer being supported by it's creator, [Brett Flannigan].
 
-<b>This plugin is no longer being supported.</b> Sorry, I just don't have the time or interest for it at this point. People are welcome to make their own forks of the project and continue it. The source is under the extremely permissive BSD license and as long as you maintain a link back to the original project somewhere (even in a text file somewhere in the project), you're welcome to do what you like with it.
+This version of WorldBorder is currently maintained by [DocW].  Its source code can be found in the [docwhomc/WorldBorder] repository on GitHub.  Join our Discord server [WorldBorder Reboot].
 
-<a href="https://www.spigotmc.org/resources/worldborder.60905/">More info is available on the Spigot Resource page for this plugin.</a>
+Brett Flannigan's original WorldBorder plugin can be downloaded from its [Spigot Resource page] and its source code can be found in the
+[Brettflan/WorldBorder] repository on GitHub.
+
+[Brett Flannigan]: https://github.com/Brettflan
+[DocW]: https://github.com/docwhomc
+[docwhomc/WorldBorder]: https://github.com/docwhomc/WorldBorder
+[WorldBorder Reboot]: https://discord.gg/ePNBgMG
+[Spigot Resource page]: https://www.spigotmc.org/resources/worldborder.60905/
+[Brettflan/WorldBorder]: https://github.com/Brettflan/WorldBorder
