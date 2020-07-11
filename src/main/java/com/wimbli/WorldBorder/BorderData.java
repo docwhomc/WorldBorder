@@ -70,6 +70,7 @@ public class BorderData
 		    return this.wrapping;
 		}
 
+		@Override
 		public String toString() {
 			return name().toLowerCase();
 		}
