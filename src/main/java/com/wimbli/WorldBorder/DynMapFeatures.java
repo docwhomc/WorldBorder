@@ -167,7 +167,7 @@ public class DynMapFeatures
 
 		if (!Config.DynmapBorderEnabled()) return;
 
-		switch ((border.getShape() == null) ? Config.ShapeRound() : border.getShape()) {
+		switch ((border.getShape() == null) ? Config.getShape() : border.getShape()) {
 		case RECTANGULAR:
         case CYLINDRICAL:
 		case TOROIDAL:

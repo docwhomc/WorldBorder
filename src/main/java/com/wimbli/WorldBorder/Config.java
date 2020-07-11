@@ -207,6 +207,7 @@ public class Config
 		DynMapFeatures.showAllBorders();
 	}
 
+	@Deprecated
 	public static BorderData.Shape ShapeRound()
 	{
 		return shape;

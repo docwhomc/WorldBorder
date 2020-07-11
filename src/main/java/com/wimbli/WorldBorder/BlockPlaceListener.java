@@ -22,7 +22,7 @@ public class BlockPlaceListener implements Listener
 		BorderData border = Config.Border(world.getName());
 		if (border == null) return;
 		
-		if (!border.insideBorder(loc.getX(), loc.getZ(), Config.ShapeRound())) 
+		if (!border.insideBorder(loc.getX(), loc.getZ(), Config.getShape())) 
 		{
 			event.setCancelled(true);
 		}

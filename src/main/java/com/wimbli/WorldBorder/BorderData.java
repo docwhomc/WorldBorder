@@ -38,7 +38,7 @@ public class BorderData
 	    CYLINDRICAL(true, "cylindrical", "cylindar"),
 	    TOROIDAL(true, "toroidal", "torus"),
 		ELLIPTIC(false, "elliptic", "circular", "ellipse", "circle"),
-        WRAPPED_ELLIPTIC(false, "wrapped elliptic", "wrapped circular", "wrapped ellipse", "wrapped circle");
+        WRAPPED_ELLIPTIC(false, "wrapped elliptic", "wrapped circular", "wrapped ellipse", "wrapped_circle", "wrapped_elliptic", "wrapped_circular", "wrapped_ellipse", "wrapped_circle");
 
 	    final private boolean wrapping;
 		private String[] aliases;
@@ -263,11 +263,11 @@ public class BorderData
 	}
 	public boolean insideBorder(double xLoc, double zLoc)
 	{
-		return insideBorder(xLoc, zLoc, Config.ShapeRound());
+		return insideBorder(xLoc, zLoc, Config.getShape());
 	}
 	public boolean insideBorder(Location loc)
 	{
-		return insideBorder(loc.getX(), loc.getZ(), Config.ShapeRound());
+		return insideBorder(loc.getX(), loc.getZ(), Config.getShape());
 	}
 	public boolean insideBorder(CoordXZ coord, Shape shape)
 	{
@@ -275,7 +275,7 @@ public class BorderData
 	}
 	public boolean insideBorder(CoordXZ coord)
 	{
-		return insideBorder(coord.x, coord.z, Config.ShapeRound());
+		return insideBorder(coord.x, coord.z, Config.getShape());
 	}
 
 	public Location correctedPosition(Location loc, Shape shape, boolean flying)
@@ -373,7 +373,7 @@ public class BorderData
 	}
 	public Location correctedPosition(Location loc)
 	{
-		return correctedPosition(loc, Config.ShapeRound(), false);
+		return correctedPosition(loc, Config.getShape(), false);
 	}
 
 	//these material IDs are acceptable for places to teleport player; breathable blocks and water

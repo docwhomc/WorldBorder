@@ -51,7 +51,7 @@ public class BorderCheckTask implements Runnable
 		BorderData border = Config.Border(world.getName());
 		if (border == null) return null;
 
-		if (border.insideBorder(loc.getX(), loc.getZ(), Config.ShapeRound()))
+		if (border.insideBorder(loc.getX(), loc.getZ(), Config.getShape()))
 			return null;
 
 		// if player is in bypass list (from bypass command), allow them beyond border; also ignore players currently being handled already
@@ -136,7 +136,7 @@ public class BorderCheckTask implements Runnable
 			Config.logWarn("Player position X: " + Config.coord.format(loc.getX()) + " Y: " + Config.coord.format(loc.getY()) + " Z: " + Config.coord.format(loc.getZ()));
 		}
 
-		Location newLoc = border.correctedPosition(loc, Config.ShapeRound(), player.isFlying());
+		Location newLoc = border.correctedPosition(loc, Config.getShape(), player.isFlying());
 
 		// it's remotely possible (such as in the Nether) a suitable location isn't available, in which case...
 		if (newLoc == null)
