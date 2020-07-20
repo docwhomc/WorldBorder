@@ -604,7 +604,14 @@ public class Config
 		int cfgVersion = cfg.getInt("cfg-version", currentCfgVersion);
 
 		String msg = cfg.getString("message");
-		shape = BorderData.Shape.valueOf(cfg.getString("shape", BorderData.Shape.ELLIPTIC.toString()));
+		if (cfgVersion < 12) {
+		    shape = cfg.getBoolean("round-border", true)
+	            ? BorderData.Shape.ELLIPTIC
+                : BorderData.Shape.RECTANGULAR;
+		} else {
+		    shape = BorderData.Shape.valueOf(
+	            cfg.getString("shape", BorderData.Shape.ELLIPTIC.toString()));
+		}
 		DEBUG = cfg.getBoolean("debug-mode", false);
 		whooshEffect = cfg.getBoolean("whoosh-effect", true);
 		portalRedirection = cfg.getBoolean("portal-redirection", true);
@@ -718,7 +725,7 @@ public class Config
 
 		cfg.set("cfg-version", currentCfgVersion);
 		cfg.set("message", message);
-		cfg.set("shape", shape);
+		cfg.set("shape", shape.toString());
 		cfg.set("debug-mode", DEBUG);
 		cfg.set("whoosh-effect", whooshEffect);
 		cfg.set("portal-redirection", portalRedirection);
