@@ -609,7 +609,7 @@ public class Config
 	            ? BorderData.Shape.ELLIPTIC
                 : BorderData.Shape.RECTANGULAR;
 		} else {
-		    shape = BorderData.Shape.valueOf(
+		    shape = BorderData.Shape.fromString(
 	            cfg.getString("shape", BorderData.Shape.ELLIPTIC.toString()));
 		}
 		DEBUG = cfg.getBoolean("debug-mode", false);
