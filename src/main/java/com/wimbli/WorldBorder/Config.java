@@ -591,7 +591,7 @@ public class Config
 	}
 
 
-	private static final int currentCfgVersion = 11;
+	private static final int currentCfgVersion = 12;
 
 	public static void load(WorldBorder master, boolean logIt)
 	{	// load config from file
