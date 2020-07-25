@@ -3,7 +3,7 @@ author: DocXana
 authors:
   - Brettflan
 description: Efficient, feature-rich plugin for limiting the size of your worlds.
-version: 2.0.0-dev-20w29a
+version: 2.0.0-dev-20w30a
 api-version: 1.16
 main: com.wimbli.WorldBorder.WorldBorder
 softdepend:
@@ -22,8 +22,7 @@ commands:
            /<command> [world] setcorners <x1> <z1> <x2> <z2> - set border from corners.
            /<command> [world] radius <radiusX> [radiusZ] - change border's radius.
            /<command> list - show border information for all worlds.
-           /<command> shape <elliptic|rectangular> - set the default border shape.
-           /<command> shape <round|square> - same as above, backwards compatible.
+           /<command> shape <ellipse|rectangle|wrapped-ellipse|cylinder|torus> - set the default border shape.
            /<command> [world] clear - remove border for this world.
            /<command> clear all - remove border for all worlds.
            /<command> [world] fill [freq] [pad] [force] - generate world to border.
@@ -31,12 +30,11 @@ commands:
            /<command> bypass [player] [on/off] - let player go beyond border.
            /<command> bypasslist - list players with border bypass enabled.
            /<command> knockback <distance> - how far to move the player back.
-           /<command> wrap [world] <on/off> - can make border crossings wrap around.
+           /<command> wrap [world] <on/off> - (deprecated) can make border crossings wrap around.
            /<command> whoosh <on/off> - turn knockback effect on or off.
            /<command> getmsg - display border message.
            /<command> setmsg <text> - set border message.
-           /<command> wshape [world] <elliptic|rectangular|default> - override shape.
-           /<command> wshape [world] <round|square|default> - same as above values.
+           /<command> wshape [world] <ellipse|rectangle|wrapped-ellipse|cylinder|torus|default> - override shape.
            /<command> delay <amount> - time between border checks.
            /<command> dynmap <on/off> - turn DynMap border display on or off.
            /<command> dynmapmsg <text> - DynMap border labels will show this.
