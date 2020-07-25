@@ -1,7 +1,9 @@
 package com.wimbli.WorldBorder;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Chunk;
@@ -41,20 +43,32 @@ public class BorderData
         WRAPPED_ELLIPTIC(false, "wrapped elliptic", "wrapped circular", "wrapped ellipse", "wrapped_circle", "wrapped_elliptic", "wrapped_circular", "wrapped_ellipse", "wrapped_circle");
 
 	    final private boolean wrapping;
+	    final private String string;
 		private String[] aliases;
+		private static List<String> names = new ArrayList<String>();
 
 		public static Map<String, Shape> aliasing = new HashMap<>();
 		static {
 			for (Shape shape : Shape.values()) {
 				for (String alias : shape.aliases) {
 					aliasing.put(alias, shape);
+		            names.add(shape.string);
 				}
 			}
 		}
 
+		public static List<String> getNames() {
+		    return names;
+		}
+
 		private Shape(boolean wrapping, String ... aliases) {
+		    this.string = aliases[0];
 		    this.wrapping = wrapping;
 			this.aliases = aliases;
+		}
+
+		public String getName() {
+		    return this.string;
 		}
 
 		public static Shape fromString(String alias) {
@@ -72,7 +86,7 @@ public class BorderData
 
 		@Override
 		public String toString() {
-			return name().toLowerCase();
+			return this.string;
 		}
 
 		@Deprecated
