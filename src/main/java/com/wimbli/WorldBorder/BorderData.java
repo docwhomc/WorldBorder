@@ -257,9 +257,12 @@ public class BorderData
 		switch (shape) {
 			// square border
 			case RECTANGULAR:
+			case CYLINDRICAL:
+			case TOROIDAL:
 				return !(xLoc < minX || xLoc > maxX || zLoc < minZ || zLoc > maxZ);
 			// round border
 			case ELLIPTIC:
+			case WRAPPED_ELLIPTIC:
 				// elegant round border checking algorithm is from rBorder by Reil with almost no changes, all credit to him for it
 				double X = Math.abs(x - xLoc);
 				double Z = Math.abs(z - zLoc);
