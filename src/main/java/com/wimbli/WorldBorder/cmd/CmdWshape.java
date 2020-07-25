@@ -6,6 +6,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import com.wimbli.WorldBorder.*;
+import com.wimbli.WorldBorder.BorderData.Shape;
 
 
 public class CmdWshape extends WBCmd
@@ -16,9 +17,12 @@ public class CmdWshape extends WBCmd
 		minParams = 1;
 		maxParams = 2;
 
-		addCmdExample(nameEmphasized() + "{world} <elliptic|rectangular|default> - shape");
+		addCmdExample(nameEmphasized() + "{world} <"
+            + String.join("|", Shape.getNames())
+            + "|default> - shape");
 		addCmdExample(C_DESC + "     override for a single world.", true, true, false);
-		addCmdExample(nameEmphasized() + "{world} <round|square|default> - same as above.");
+		// TODO: update
+//		addCmdExample(nameEmphasized() + "{world} <round|square|default> - same as above.");
 		helpText = "This will override the default border shape for a single world. The value \"default\" implies " +
 			"a world is just using the default border shape. See the " + commandEmphasized("shape") + C_DESC +
 			"command for more info and to set the default border shape.";
@@ -56,12 +60,15 @@ public class CmdWshape extends WBCmd
 		}
 
 		BorderData.Shape shape = null;
-		if (shapeName.equals("rectangular") || shapeName.equals("square"))
-			shape = BorderData.Shape.RECTANGULAR;
-		else if (shapeName.equals("elliptic") || shapeName.equals("round"))
-			shape = BorderData.Shape.ELLIPTIC;
-		else
-			shape = BorderData.Shape.valueOf(shapeName);
+		if (shapeName != "default") {
+    		try {
+    		    shape = Shape.fromString(shapeName);
+    		} catch (IllegalArgumentException e) {
+    		    sendErrorAndHelp(
+    		        sender, "\"" + shapeName + "\" is not a valid shape name.");
+    		    return;
+    		}
+		}
 
 		border.setShape(shape);
 		Config.setBorder(worldName, border, false);

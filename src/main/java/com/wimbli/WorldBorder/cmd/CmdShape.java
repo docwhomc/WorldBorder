@@ -38,7 +38,7 @@ public class CmdShape extends WBCmd
 	{
 		String shape = params.get(0).toLowerCase();
 		try {
-		    Config.setShape(BorderData.Shape.fromString(shape));
+		    Config.setShape(Shape.fromString(shape));
 		} catch (IllegalArgumentException e) {
 		    sendErrorAndHelp(sender, "You must specify one of the valid shape names below.");
             return;
