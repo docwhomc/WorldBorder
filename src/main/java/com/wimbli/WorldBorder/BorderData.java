@@ -36,11 +36,12 @@ public class BorderData
 	 * Based in part on <https://stackoverflow.com/a/12512216>.
 	 */
 	public enum Shape {
-		RECTANGULAR(false, "rectangular", "square", "rectangle"),
-	    CYLINDRICAL(true, "cylindrical", "cylindar"),
-	    TOROIDAL(true, "toroidal", "torus"),
-		ELLIPTIC(false, "elliptic", "circular", "ellipse", "circle"),
-        WRAPPED_ELLIPTIC(false, "wrapped elliptic", "wrapped circular", "wrapped ellipse", "wrapped_circle", "wrapped_elliptic", "wrapped_circular", "wrapped_ellipse", "wrapped_circle");
+		RECTANGULAR(false, "rectangle", "square", "rectangular"),
+	    CYLINDRICAL(true, "cylindar", "cylindrical"),
+	    TOROIDAL(true, "torus", "toroidal"),
+		ELLIPTIC(false, "ellipse", "circle", "elliptic", "circular"),
+        WRAPPED_ELLIPTIC(false, "wrapped-ellipse", "wrapped-circle",
+            "wrapped-elliptic", "wrapped-circular");
 
 	    final private boolean wrapping;
 	    final private String string;
