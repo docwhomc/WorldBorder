@@ -756,7 +756,7 @@ public class Config
 			cfg.set("worlds." + name + ".radiusZ", bord.getRadiusZ());
 
 			if (bord.getShape() != null)
-				cfg.set("worlds." + name + ".shape", bord.getShape());
+				cfg.set("worlds." + name + ".shape", bord.getShape().toString());
 		}
 
 		if (storeFillTask && fillTask != null && fillTask.valid())
