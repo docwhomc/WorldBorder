@@ -36,11 +36,11 @@ public class BorderData
 	 * Based in part on <https://stackoverflow.com/a/12512216>.
 	 */
 	public enum Shape {
-		RECTANGULAR(false, "rectangle", "square", "rectangular"),
-	    CYLINDRICAL(true, "cylinder", "cylindrical"),
-	    TOROIDAL(true, "torus", "toroidal"),
-		ELLIPTIC(false, "ellipse", "circle", "elliptic", "circular"),
-        WRAPPED_ELLIPTIC(false, "wrapped-ellipse", "wrapped-circle",
+		RECTANGLE(false, "rectangle", "square", "rectangular"),
+	    CYLINDER(true, "cylinder", "cylindrical"),
+	    TOROUS(true, "torus", "toroidal"),
+		ELLIPSE(false, "ellipse", "circle", "elliptic", "circular"),
+        WRAPPED_ELLIPSE(false, "wrapped-ellipse", "wrapped-circle",
             "wrapped-elliptic", "wrapped-circular");
 
 	    final private boolean wrapping;
@@ -93,16 +93,16 @@ public class BorderData
 		@Deprecated
 		public Shape withWrapping(boolean wrapping) {
 		    switch (this) {
-                case CYLINDRICAL :
-                    return wrapping ? this : Shape.RECTANGULAR;
-                case ELLIPTIC :
-                    return wrapping ? Shape.WRAPPED_ELLIPTIC : this;
-                case RECTANGULAR :
-                    return wrapping ? Shape.TOROIDAL : this;
-                case TOROIDAL :
-                    return wrapping ? this : Shape.RECTANGULAR;
-                case WRAPPED_ELLIPTIC :
-                    return wrapping ? this : Shape.ELLIPTIC;
+                case CYLINDER :
+                    return wrapping ? this : Shape.RECTANGLE;
+                case ELLIPSE :
+                    return wrapping ? Shape.WRAPPED_ELLIPSE : this;
+                case RECTANGLE :
+                    return wrapping ? Shape.TOROUS : this;
+                case TOROUS :
+                    return wrapping ? this : Shape.RECTANGLE;
+                case WRAPPED_ELLIPSE :
+                    return wrapping ? this : Shape.ELLIPSE;
 		    }
 		    throw new IllegalArgumentException("invalid "+this.getClass().getCanonicalName()+" value "+this.toString());
 		}
@@ -256,13 +256,13 @@ public class BorderData
 
 		switch (shape) {
 			// square border
-			case RECTANGULAR:
-			case CYLINDRICAL:
-			case TOROIDAL:
+			case RECTANGLE:
+			case CYLINDER:
+			case TOROUS:
 				return !(xLoc < minX || xLoc > maxX || zLoc < minZ || zLoc > maxZ);
 			// round border
-			case ELLIPTIC:
-			case WRAPPED_ELLIPTIC:
+			case ELLIPSE:
+			case WRAPPED_ELLIPSE:
 				// elegant round border checking algorithm is from rBorder by Reil with almost no changes, all credit to him for it
 				double X = Math.abs(x - xLoc);
 				double Z = Math.abs(z - zLoc);
@@ -314,7 +314,7 @@ public class BorderData
 		
 		switch (shape) {
 			// square border
-			case RECTANGULAR:
+			case RECTANGLE:
 			    if (xLoc <= minX)
                     xLoc = minX + Config.KnockBack();
                 else if (xLoc >= maxX)
@@ -324,7 +324,7 @@ public class BorderData
                 else if (zLoc >= maxZ)
                     zLoc = maxZ - Config.KnockBack();
 				break;
-			case CYLINDRICAL:
+			case CYLINDER:
 	             if (xLoc <= minX)
                     xLoc = maxX - Config.KnockBack();
                 else if (xLoc >= maxX)
@@ -334,7 +334,7 @@ public class BorderData
                 else if (zLoc >= maxZ)
                     zLoc = maxZ - Config.KnockBack();
 			    break;
-			case TOROIDAL:
+			case TOROUS:
 			    if (xLoc <= minX)
                     xLoc = maxX - Config.KnockBack();
                 else if (xLoc >= maxX)
@@ -345,7 +345,7 @@ public class BorderData
                     zLoc = minZ + Config.KnockBack();
                 break;
 			// round border
-			case ELLIPTIC:
+			case ELLIPSE:
 				// algorithm originally from: http://stackoverflow.com/questions/300871/best-way-to-find-a-point-on-a-circle-closest-to-a-given-point
 				// modified by Lang Lukas to support elliptical border shape
 	
@@ -357,7 +357,7 @@ public class BorderData
 				f = (1 / dT - Config.KnockBack() / dU); //"correction" factor for the distances
 				xLoc = x + dX * f;
 				zLoc = z + dZ * f;
-			case WRAPPED_ELLIPTIC:
+			case WRAPPED_ELLIPSE:
 	            // algorithm originally from: http://stackoverflow.com/questions/300871/best-way-to-find-a-point-on-a-circle-closest-to-a-given-point
                 // modified by Lang Lukas to support elliptical border shape
     

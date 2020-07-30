@@ -36,7 +36,7 @@ public class Config
 	private static Runtime rt = Runtime.getRuntime();
 
 	// actual configuration values which can be changed
-	private static BorderData.Shape shape = BorderData.Shape.ELLIPTIC;
+	private static BorderData.Shape shape = BorderData.Shape.ELLIPSE;
 	private static Map<String, BorderData> borders = Collections.synchronizedMap(new LinkedHashMap<String, BorderData>());
 	private static Set<UUID> bypassPlayers = Collections.synchronizedSet(new LinkedHashSet<UUID>());
 	private static String message;		// raw message without color code formatting
@@ -606,11 +606,11 @@ public class Config
 		String msg = cfg.getString("message");
 		if (cfgVersion < 12) {
 		    shape = cfg.getBoolean("round-border", true)
-	            ? BorderData.Shape.ELLIPTIC
-                : BorderData.Shape.RECTANGULAR;
+	            ? BorderData.Shape.ELLIPSE
+                : BorderData.Shape.RECTANGLE;
 		} else {
 		    shape = BorderData.Shape.fromString(
-	            cfg.getString("shape", BorderData.Shape.ELLIPTIC.toString()));
+	            cfg.getString("shape", BorderData.Shape.ELLIPSE.toString()));
 		}
 		DEBUG = cfg.getBoolean("debug-mode", false);
 		whooshEffect = cfg.getBoolean("whoosh-effect", true);

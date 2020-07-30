@@ -168,13 +168,13 @@ public class DynMapFeatures
 		if (!Config.DynmapBorderEnabled()) return;
 
 		switch ((border.getShape() == null) ? Config.getShape() : border.getShape()) {
-		case RECTANGULAR:
-        case CYLINDRICAL:
-		case TOROIDAL:
+		case RECTANGLE:
+        case CYLINDER:
+		case TOROUS:
 			showSquareBorder(worldName, border);
 			break;
-		case ELLIPTIC:
-		case WRAPPED_ELLIPTIC:
+		case ELLIPSE:
+		case WRAPPED_ELLIPSE:
 			showRoundBorder(worldName, border);
 			break;
 		}
