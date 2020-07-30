@@ -37,7 +37,7 @@ public class BorderData
 	 */
 	public enum Shape {
 		RECTANGULAR(false, "rectangle", "square", "rectangular"),
-	    CYLINDRICAL(true, "cylindar", "cylindrical"),
+	    CYLINDRICAL(true, "cylinder", "cylindrical"),
 	    TOROIDAL(true, "torus", "toroidal"),
 		ELLIPTIC(false, "ellipse", "circle", "elliptic", "circular"),
         WRAPPED_ELLIPTIC(false, "wrapped-ellipse", "wrapped-circle",
