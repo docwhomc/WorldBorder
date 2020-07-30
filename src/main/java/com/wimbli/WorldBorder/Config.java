@@ -685,7 +685,7 @@ public class Config
 				        bord.getDouble("z", 0),
 				        bord.getInt("radiusX", 0),
 				        bord.getInt("radiusZ", 0),
-				        (BorderData.Shape) bord.get("shape"));
+				        BorderData.Shape.fromString(bord.getString("shape")));
 				borders.put(worldName, border);
 				logConfig(BorderDescription(worldName));
 			}
