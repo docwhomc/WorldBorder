@@ -270,8 +270,11 @@ public class WorldTrimTask implements Runnable
 	{
 		for (CoordXZ unload : trimChunks)
 		{
-			if (world.isChunkLoaded(unload.x, unload.z))
-				world.unloadChunk(unload.x, unload.z, false);
+			if (world.isChunkLoaded(unload.x, unload.z)) {
+				if (!world.unloadChunk(unload.x, unload.z, false)) {
+				    sendMessage("Warning! could not unload chunk: "+unload.x+", "+unload.z);
+				}
+			}
 		}
 		counter += trimChunks.size();
 	}
