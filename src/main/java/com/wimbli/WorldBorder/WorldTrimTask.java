@@ -32,7 +32,7 @@ public class WorldTrimTask implements Runnable
 	// values for what chunk in the current region we're at
 	private transient int currentRegion = -1;  // region(file) we're at in regionFiles
 	private transient int regionX = 0;  // X location value of the current region
-	private transient int regionZ = 0;  // X location value of the current region
+	private transient int regionZ = 0;  // Z location value of the current region
 	private transient int currentChunk = 0;  // chunk we've reached in the current region (regionChunks)
 	private transient List<CoordXZ> regionChunks = new ArrayList<CoordXZ>(1024);
 	private transient List<CoordXZ> trimChunks = new ArrayList<CoordXZ>(1024);
