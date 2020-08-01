@@ -3,8 +3,8 @@ author: DocXana
 authors:
   - Brettflan
 description: Efficient, feature-rich plugin for limiting the size of your worlds.
-version: 2.0.0-dev-20w31b
-api-version: 1.16
+version: 2.0.0-dev-20w31b-bp-1.15.2
+api-version: 1.15
 main: com.wimbli.WorldBorder.WorldBorder
 softdepend:
   - dynmap
