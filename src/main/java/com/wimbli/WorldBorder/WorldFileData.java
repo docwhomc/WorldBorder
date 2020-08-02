@@ -1,7 +1,9 @@
 package com.wimbli.WorldBorder;
 
 import java.io.*;
+import java.lang.Runtime.Version;
 import java.util.ArrayList;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
@@ -204,7 +206,14 @@ public class WorldFileData
 					if (regionData.getChannel().read(header) == -1)
 						throw new EOFException();
 				}
-				header.clear();
+                // If Java version less than 9.0 (i.e. a 1.8... or
+                // lower) type cast to Buffer before executing clear()
+                // method.
+                if (Version.parse(System.getProperty("java.version"))
+                    .compareTo(Version.parse("9.0")) < 0)
+                    ((Buffer) header).clear();
+                else
+                    header.clear();
 				IntBuffer headerAsInts = header.asIntBuffer();
 
 				// first 4096 bytes of region file consists of 4-byte int pointers to chunk data in the file (32*32 chunks = 1024; 1024 chunks * 4 bytes each = 4096)
