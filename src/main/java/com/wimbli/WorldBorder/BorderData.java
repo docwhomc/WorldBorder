@@ -76,7 +76,8 @@ public class BorderData
 			Shape shape = aliasing.get(alias);
 			if (shape == null) {
 				throw new IllegalArgumentException(
-						"No enum alias " + Shape.class.getCanonicalName() + "." + alias);
+                    "No enum alias \"" + alias + "\" of "
+                    + Shape.class.getCanonicalName());
 			}
 			return shape;
 		}
