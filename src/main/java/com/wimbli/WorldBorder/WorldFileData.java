@@ -210,7 +210,7 @@ public class WorldFileData
                 // lower) type cast to Buffer before executing clear()
                 // method.
                 if (Version.parse(System.getProperty("java.version"))
-                    .compareTo(Version.parse("9.0")) < 0)
+                    .compareTo(Version.parse("9")) < 0)
                     ((Buffer) header).clear();
                 else
                     header.clear();
