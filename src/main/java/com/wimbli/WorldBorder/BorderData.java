@@ -73,6 +73,8 @@ public class BorderData
 		}
 
 		public static Shape fromString(String alias) {
+		    if (alias == null || alias.length() == 0)
+		        return null;
 			Shape shape = aliasing.get(alias);
 			if (shape == null) {
 				throw new IllegalArgumentException(
