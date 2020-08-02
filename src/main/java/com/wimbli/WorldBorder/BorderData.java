@@ -35,7 +35,7 @@ public class BorderData
 	/*
 	 * Based in part on <https://stackoverflow.com/a/12512216>.
 	 */
-	public enum Shape {
+	public static enum Shape {
 		RECTANGLE(false, "rectangle", "square", "rectangular"),
 	    CYLINDER(true, "cylinder", "cylindrical"),
 	    TOROUS(true, "torus", "toroidal"),
