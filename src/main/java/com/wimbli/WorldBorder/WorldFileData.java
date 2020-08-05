@@ -2,6 +2,7 @@ package com.wimbli.WorldBorder;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashMap;
@@ -204,7 +205,27 @@ public class WorldFileData
 					if (regionData.getChannel().read(header) == -1)
 						throw new EOFException();
 				}
-				header.clear();
+
+                /*
+                 * For Java <9 (i.e. <1.8 || ~1.8), type cast
+                 * {@code header} from {@code ByteBuffer} to
+                 * {@code Buffer} before executing its {@code clear()}
+                 * method.
+                 * <p>
+                 * A conditional check is used so that the
+                 * aforementioned type casting is only performed when
+                 * necessary and to facilitate backwards compatibility
+                 * when WorldBorder switches from Java ~1.8 to Java >=9
+                 * (at the time of writing, WorldBorder uses Java ~1.8,
+                 * but this may not be the case when you are reading
+                 * this, as it is entirely possible that this comment
+                 * will go unupdated during the switch to Java >=9.
+                 */
+				if (System.getProperty("java.version").substring(0, 2) == "1.")
+                    ((Buffer) header).clear();
+                else
+                    header.clear();
+
 				IntBuffer headerAsInts = header.asIntBuffer();
 
 				// first 4096 bytes of region file consists of 4-byte int pointers to chunk data in the file (32*32 chunks = 1024; 1024 chunks * 4 bytes each = 4096)

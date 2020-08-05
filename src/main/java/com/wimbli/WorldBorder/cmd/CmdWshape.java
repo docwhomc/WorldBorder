@@ -60,7 +60,7 @@ public class CmdWshape extends WBCmd
 		}
 
 		BorderData.Shape shape = null;
-		if (shapeName != "default") {
+		if (!shapeName.equals("default")) {
     		try {
     		    shape = Shape.fromString(shapeName);
     		} catch (IllegalArgumentException e) {

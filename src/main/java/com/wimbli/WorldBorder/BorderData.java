@@ -35,7 +35,7 @@ public class BorderData
 	/*
 	 * Based in part on <https://stackoverflow.com/a/12512216>.
 	 */
-	public enum Shape {
+	public static enum Shape {
 		RECTANGLE(false, "rectangle", "square", "rectangular"),
 	    CYLINDER(true, "cylinder", "cylindrical"),
 	    TOROUS(true, "torus", "toroidal"),
@@ -73,10 +73,13 @@ public class BorderData
 		}
 
 		public static Shape fromString(String alias) {
+		    if (alias == null || alias.length() == 0)
+		        return null;
 			Shape shape = aliasing.get(alias);
 			if (shape == null) {
 				throw new IllegalArgumentException(
-						"No enum alias " + Shape.class.getCanonicalName() + "." + alias);
+                    "No enum alias \"" + alias + "\" of "
+                    + Shape.class.getCanonicalName());
 			}
 			return shape;
 		}
